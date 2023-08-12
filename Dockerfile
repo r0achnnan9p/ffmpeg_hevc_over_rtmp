@@ -26,5 +26,5 @@ RUN ./configure && \
     make && \
     make install
 
-# 设置容器默认命令
-CMD ["ffmpeg"]
+# 设置容器的默认入口点
+ENTRYPOINT ["ffmpeg"]
