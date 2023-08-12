@@ -27,4 +27,4 @@ RUN ./configure && \
     make install
 
 # 设置容器默认命令
-CMD ["ffmpeg", "--version"]
+CMD ["ffmpeg"]
