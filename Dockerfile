@@ -1,4 +1,4 @@
-# 使用 Alpine 作为基础镜像
+# 使用 Alpine Linux 作为基础镜像
 FROM alpine:latest
 
 # 安装必要的依赖项
@@ -11,8 +11,7 @@ RUN apk update && \
     coreutils \
     pkgconf \
     libtool \
-    nasm && \
-    # 添加其他可能需要的库，例如：lame-dev, x264-dev, x265-dev, libvpx-dev 等
+    nasm
 
 # 克隆 ffmpeg 源代码
 RUN git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg_source
