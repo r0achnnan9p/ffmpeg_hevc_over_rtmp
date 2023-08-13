@@ -12,6 +12,9 @@ RUN apk update && \
     pkgconf \
     libtool \
     nasm \
+    libx264-dev \
+    libx265-dev \
+    srt-dev \
     openssl-dev
 
 # 克隆 ffmpeg 源代码
@@ -23,7 +26,7 @@ RUN git clone https://github.com/runner365/ffmpeg_rtmp_h265.git && \
 
 # 进入源代码目录并编译 FFmpeg
 WORKDIR /ffmpeg_source
-RUN ./configure && \
+RUN ./configure --enable-libsrt --enable-libx264 --enable-libx265 --enable-openssl && \
     make && \
     make install
 
