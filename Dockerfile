@@ -11,7 +11,8 @@ RUN apk update && \
     coreutils \
     pkgconf \
     libtool \
-    nasm
+    nasm \
+    openssl-dev
 
 # 克隆 ffmpeg 源代码
 RUN git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg_source
