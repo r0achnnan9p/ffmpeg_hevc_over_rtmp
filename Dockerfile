@@ -1,5 +1,5 @@
-# 使用Ubuntu 22.04 LTS作为基础镜像
-FROM ubuntu:22.04
+# 使用Ubuntu作为基础镜像
+FROM ubuntu AS base
 
 # 设置非交互模式，避免一些提示信息
 ENV DEBIAN_FRONTEND=noninteractive
@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y \
     libssl-dev
 
 # 克隆 ffmpeg 源代码
-RUN git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg_source
+RUN git clone -b release/6.1 https://git.ffmpeg.org/ffmpeg.git ffmpeg_source
 
 # 克隆 RTMP HEVC 项目
 RUN git clone https://github.com/runner365/ffmpeg_rtmp_h265.git && \
@@ -39,9 +39,21 @@ RUN ./configure \
     make -j$(nproc) && \
     make install
 
-# 清理不必要的包以减少镜像大小
-RUN apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /ffmpeg
+# 第二阶段：创建运行时镜像
+FROM ubuntu
 
+# 安装运行时所需的依赖库
+RUN apt-get update && apt-get install -y \
+    libsrt-openssl-dev \
+    libx264-dev \
+    libx265-dev \
+    libsrt-openssl-dev \
+    libssl-dev && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# 复制编译好的 FFmpeg 二进制文件
+COPY --from=base /usr/local/bin/ffmpeg /usr/local/bin/ffmpeg
+COPY --from=base /usr/local/bin/ffprobe /usr/local/bin/ffprobe
 
 # 设置入口点
 ENTRYPOINT ["ffmpeg"]
